@@ -1,5 +1,6 @@
 const db = require("./../models");
-var bcrypt = require("bcrypt");
+const jwtHelper = require("./../utils/jwt");
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
 class Users {
   async signUp(req, res) {
@@ -36,8 +37,19 @@ class Users {
       }
     })
       .then(async result => {
-        const isPasswordCorrect = await bcrypt.compare(req.body.password, result.password);
-        res.send(isPasswordCorrect);
+        const isPasswordCorrect = await bcrypt.compare(
+          req.body.password,
+          result.password
+        );
+        if (!isPasswordCorrect) {
+          res.status(401);
+          return res.send({
+            status: false,
+            message: "Password in correct, please provide correct password"
+          });
+        }
+        const token = jwtHelper.issue({id: result.id});
+        res.send({ status: true, message: "Singin successful", token });
       })
       .catch(err => {
         console.log("Error", err);
