@@ -29,5 +29,21 @@ class Users {
         res.send({ status: false, message: "Sorry , couldn't create user" });
       });
   }
+  singIn(req, res) {
+    db.User.findOne({
+      where: {
+        email: req.body.email
+      }
+    })
+      .then(async result => {
+        const isPasswordCorrect = await bcrypt.compare(req.body.password, result.password);
+        res.send(isPasswordCorrect);
+      })
+      .catch(err => {
+        console.log("Error", err);
+        res.status(500);
+        res.send({ status: false, message: "Sorry , couldn't singin" });
+      });
+  }
 }
 module.exports = new Users();
