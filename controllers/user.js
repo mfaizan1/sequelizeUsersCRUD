@@ -57,5 +57,18 @@ class Users {
         res.send({ status: false, message: "Sorry , couldn't singin" });
       });
   }
+  userDetails(req, res){
+    db.User.findOne({
+      attributes: [`firstName`,`lastName`,`email`],
+      where:{
+        id : req.userId
+      }
+    }).then((result) => {
+      res.send(result);
+    }).catch((err) => {
+      
+    });
+
+  }
 }
 module.exports = new Users();
