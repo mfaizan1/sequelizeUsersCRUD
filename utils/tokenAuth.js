@@ -1,18 +1,16 @@
-
-let jwt = require('jsonwebtoken');
-const config = require("../config/serverConfig.json");
-const jwtHelper = require('./jwt')
+'use strict';
+const jwtHelper = require('./jwt');
 
 let checkToken = (req, res, next) => {
   let token = req.headers['authorization'];
-  console.log(token) ;
+  console.log(token);
   if (token) {
     if (token.startsWith('Bearer ')) {
       // Remove Bearer from string
       token = token.slice(7, token.length);
     }
-    const isVerified  = jwtHelper.verify(token);
-    if(isVerified){
+    const isVerified = jwtHelper.verify(token);
+    if (isVerified) {
       req.userId = isVerified.id;
       next();
     } else {
@@ -32,3 +30,4 @@ let checkToken = (req, res, next) => {
 module.exports = {
   checkToken: checkToken
 }
+;

@@ -1,6 +1,7 @@
-const db = require("./../models");
-const jwtHelper = require("./../utils/jwt");
-const bcrypt = require("bcrypt");
+'use strict';
+const db = require('./../models');
+const jwtHelper = require('./../utils/jwt');
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
 class Users {
   async signUp(req, res) {
@@ -8,11 +9,11 @@ class Users {
     try {
       passwrodHash = await bcrypt.hash(req.body.password, saltRounds);
     } catch (error) {
-      console.log("Error", err);
+      console.log('Error', error);
       res.status(500);
       return res.send({
         status: false,
-        message: "Sorry, couldn't create user, hashing failed"
+        message: 'Sorry, couldn\'t create user, hashing failed'
       });
     }
     db.User.create({
@@ -22,12 +23,12 @@ class Users {
       password: passwrodHash
     })
       .then(user => {
-        res.send({ status: true, message: "user created succesfully" });
+        res.send({ status: true, message: 'user created succesfully' });
       })
       .catch(err => {
-        console.log("Error", err);
+        console.log('Error', err);
         res.status(500);
-        res.send({ status: false, message: "Sorry , couldn't create user" });
+        res.send({ status: false, message: 'Sorry , couldn\'t create user' });
       });
   }
   singIn(req, res) {
@@ -45,41 +46,41 @@ class Users {
           res.status(401);
           return res.send({
             status: false,
-            message: "Password in correct, please provide correct password"
+            message: 'Password in correct, please provide correct password'
           });
         }
-        const token = jwtHelper.issue({id: result.id});
-        res.send({ status: true, message: "Singin successful", token });
+        const token = jwtHelper.issue({ id: result.id });
+        res.send({ status: true, message: 'Singin successful', token });
       })
       .catch(err => {
-        console.log("Error", err);
+        console.log('Error', err);
         res.status(500);
-        res.send({ status: false, message: "Sorry , couldn't singin" });
+        res.send({ status: false, message: 'Sorry , couldn\'t singin' });
       });
   }
-  userDetails(req, res){
+  userDetails(req, res) {
     db.User.findOne({
-      attributes: [`firstName`,`lastName`,`email`],
-      where:{
-        id : req.userId
+      attributes: ['firstName', 'lastName', 'email'],
+      where: {
+        id: req.userId
       }
     }).then((result) => {
       res.send(result);
     }).catch((err) => {
-      console.log('Error',err);
+      console.log('Error', err);
       res.status(500);
-      res.send({msgForUser: 'Internal server error', msgForDebugging: err});
+      res.send({ msgForUser: 'Internal server error', msgForDebugging: err });
     });
 
   }
-  changePassword(req, res){
+  changePassword(req, res) {
     console.log(req.body);
     db.User.findOne({
-      attributes: [`password`],
-      where:{
-        id : req.userId
+      attributes: ['password'],
+      where: {
+        id: req.userId
       }
-    }).then(async (result) => {
+    }).then(async(result) => {
       console.log(result);
       const isPasswordCorrect = await bcrypt.compare(
         req.body.oldPassword,
@@ -89,18 +90,18 @@ class Users {
         res.status(401);
         return res.send({
           status: false,
-          message: "Password in correct, please provide correct password"
+          message: 'Password in correct, please provide correct password'
         });
       }
       let passwrodHash;
       try {
         passwrodHash = await bcrypt.hash(req.body.newPassword, saltRounds);
       } catch (error) {
-        console.log("Error", error);
+        console.log('Error', error);
         res.status(500);
         return res.send({
           status: false,
-          message: "Sorry, couldn't create user, hashing failed"
+          message: 'Sorry, couldn\'t create user, hashing failed'
         });
       }
       db.User.update(
@@ -110,16 +111,20 @@ class Users {
             id: req.userId
           }
         }).then((result) => {
-          return res.send({ status: true, message: "Pasword updated successfull" });
-        }).catch((err) => {
-          console.log('Error', err);
-          res.status(500);
-          res.send({ msgForUser: 'Internal server error', msgForDebugging: err })
-        });
+        return res.send(
+          {
+            status: true,
+            message: 'Pasword updated successfull'
+          });
+      }).catch((err) => {
+        console.log('Error', err);
+        res.status(500);
+        res.send({ msgForUser: 'Internal server error', msgForDebugging: err });
+      });
     }).catch((err) => {
-      console.log('Error',err);
+      console.log('Error', err);
       res.status(500);
-      res.send({msgForUser: 'Internal server error', msgForDebugging: err});
+      res.send({ msgForUser: 'Internal server error', msgForDebugging: err });
     });
 
   }

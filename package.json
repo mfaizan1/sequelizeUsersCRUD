@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pretest": "eslint --ignore-path .eslintignore .",
+    "lint": "eslint --fix --ignore-path .eslintignore "
   },
   "author": "",
   "license": "ISC",
@@ -17,5 +19,8 @@
     "sequelize": "^5.18.0",
     "sequelize-cli": "^5.5.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint": "^6.3.0",
+    "eslint-config-strongloop": "^2.1.0"
+  }
 }

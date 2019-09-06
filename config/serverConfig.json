@@ -1,5 +1,4 @@
 {
-      "serverPort": 1234,
-      "jwtSecret": "putAnythingHere"
-  }
-  
+    "serverPort": 1234,
+    "jwtSecret": "putAnythingHere"
+}

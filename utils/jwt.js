@@ -1,12 +1,13 @@
-const jwt = require("jsonwebtoken");
-const config = require("../config/serverConfig.json");
+'use strict';
+const jwt = require('jsonwebtoken');
+const config = require('../config/serverConfig.json');
 module.exports = {
   issue(payload, expiresIn) {
     return jwt.sign(
-        payload, 
-        config.jwtSecret, {
-      expiresIn:  "7d"
-    });
+      payload,
+      config.jwtSecret, {
+        expiresIn: '7d'
+      });
   },
   verify(token) {
     try {
