@@ -72,5 +72,56 @@ class Users {
     });
 
   }
+  changePassword(req, res){
+    console.log(req.body);
+    db.User.findOne({
+      attributes: [`password`],
+      where:{
+        id : req.userId
+      }
+    }).then(async (result) => {
+      console.log(result);
+      const isPasswordCorrect = await bcrypt.compare(
+        req.body.oldPassword,
+        result.password
+      );
+      if (!isPasswordCorrect) {
+        res.status(401);
+        return res.send({
+          status: false,
+          message: "Password in correct, please provide correct password"
+        });
+      }
+      let passwrodHash;
+      try {
+        passwrodHash = await bcrypt.hash(req.body.newPassword, saltRounds);
+      } catch (error) {
+        console.log("Error", error);
+        res.status(500);
+        return res.send({
+          status: false,
+          message: "Sorry, couldn't create user, hashing failed"
+        });
+      }
+      db.User.update(
+        { password: passwrodHash },
+        {
+          where: {
+            id: req.userId
+          }
+        }).then((result) => {
+          return res.send({ status: true, message: "Pasword updated successfull" });
+        }).catch((err) => {
+          console.log('Error', err);
+          res.status(500);
+          res.send({ msgForUser: 'Internal server error', msgForDebugging: err })
+        });
+    }).catch((err) => {
+      console.log('Error',err);
+      res.status(500);
+      res.send({msgForUser: 'Internal server error', msgForDebugging: err});
+    });
+
+  }
 }
 module.exports = new Users();
