@@ -66,7 +66,9 @@ class Users {
     }).then((result) => {
       res.send(result);
     }).catch((err) => {
-      
+      console.log('Error',err);
+      res.status(500);
+      res.send({msgForUser: 'Internal server error', msgForDebugging: err});
     });
 
   }

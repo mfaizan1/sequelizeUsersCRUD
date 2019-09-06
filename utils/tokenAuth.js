@@ -6,11 +6,11 @@ const jwtHelper = require('./jwt')
 let checkToken = (req, res, next) => {
   let token = req.headers['authorization'];
   console.log(token) ;
-  if (token.startsWith('Bearer ')) {
-    // Remove Bearer from string
-    token = token.slice(7, token.length);
-  }
   if (token) {
+    if (token.startsWith('Bearer ')) {
+      // Remove Bearer from string
+      token = token.slice(7, token.length);
+    }
     const isVerified  = jwtHelper.verify(token);
     if(isVerified){
       req.userId = isVerified.id;
