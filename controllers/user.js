@@ -65,11 +65,16 @@ class Users {
         id: req.userId
       }
     }).then((result) => {
-      res.send(result);
+      const {firstName, lastName, email} = result;
+      res.send({firstName, lastName, email, success: true});
     }).catch((err) => {
       console.log('Error', err);
       res.status(500);
-      res.send({ msgForUser: 'Internal server error', msgForDebugging: err });
+      res.send({
+        success: false,
+        msgForUser: 'Internal server error',
+        msgForDebugging: err
+      });
     });
 
   }
