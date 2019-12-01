@@ -3,7 +3,6 @@ const jwtHelper = require('./jwt');
 
 let checkToken = (req, res, next) => {
   let token = req.headers['authorization'];
-  console.log(token);
   if (token) {
     if (token.startsWith('Bearer ')) {
       // Remove Bearer from string
