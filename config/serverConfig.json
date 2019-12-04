@@ -1,4 +1,11 @@
 {
     "serverPort": 1234,
-    "jwtSecret": "putAnythingHere"
+    "jwtSecret": "putAnythingHere",
+    "facebookAuth" : {
+        "clientID"      : "391603021463391",
+        "clientSecret"  : "9946e836363d88afd26c1607a2503a6f",
+        "callbackURL"     : "http://localhost:1234/auth/facebook/callback",
+        "profileURL": "https://graph.facebook.com/v2.5/me?fields=first_name,last_name,email"
+    
+      }
 }
