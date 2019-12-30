@@ -14,7 +14,7 @@ module.exports = function(app) {
 
   // social auths
   app.post('/auth/facebook',
-    passport.authenticate('facebook-token', {session: false}),
+    passport.authorize('facebook-token', {session: false}),
     socialAuths.fbAuth);
 }
 ;
