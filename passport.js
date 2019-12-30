@@ -1,12 +1,22 @@
 'use strict';
 
 var passport = require('passport');
-var TwitterTokenStrategy = require('passport-twitter-token');
+// var TwitterTokenStrategy = require('passport-twitter-token');
 var FacebookTokenStrategy = require('passport-facebook-token');
-var GoogleTokenStrategy = require('passport-google-token').Strategy;
+// var GoogleTokenStrategy = require('passport-google-token').Strategy;
 const config = require('./config/serverConfig.json');
 
 module.exports = function() {
+
+
+  passport.use(new FacebookTokenStrategy({
+    clientID: config.facebookAuth.clientID,
+    clientSecret: config.facebookAuth.clientSecret
+  },
+  function(accessToken, refreshToken, profile, done) {
+    const user = {accessToken, profile};
+    return done(null, user);
+  }));
 
   //   passport.use(new TwitterTokenStrategy({
   //     consumerKey: config.twitterAuth.consumerKey,
@@ -18,14 +28,6 @@ module.exports = function() {
   //       return done(err, user);
   //     });
   //   }));
-
-  passport.use(new FacebookTokenStrategy({
-    clientID: config.facebookAuth.clientID,
-    clientSecret: config.facebookAuth.clientSecret
-  },
-  function(accessToken, refreshToken, profile, done) {
-    return done(accessToken, profile);
-  }));
 
 //   passport.use(new GoogleTokenStrategy({
 //     clientID: config.googleAuth.clientID,
