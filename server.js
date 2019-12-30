@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
+const db = require('./models');
+require('./associations/associations')();
 var corsOption = {
   origin: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -15,6 +17,11 @@ const config = require('./config/serverConfig.json');
 app.use(bodyParser.json());
 require('./routes')(app);
 
+db.sequelize.sync({force: false})
+  . then(() => {
+    console.log('table generated');
+  })
+  . catch((err) => console.log(err));
 
 app.listen(
   config.serverPort,
