@@ -38,15 +38,22 @@ class Users {
       }
     })
       .then(async result => {
+        if (!result) {
+          res.status(404);
+          return res.send({
+            status: false,
+            message: 'Email or Password is incorrect, please provide correct password'
+          });
+        }
         const isPasswordCorrect = await bcrypt.compare(
           req.body.password,
           result.password
         );
         if (!isPasswordCorrect) {
-          res.status(401);
+          res.status(404);
           return res.send({
             status: false,
-            message: 'Password incorrect, please provide correct password'
+            message: 'Email or Password is incorrect, please provide correct password'
           });
         }
         const token = jwtHelper.issue({ id: result.id });
