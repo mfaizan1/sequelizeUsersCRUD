@@ -46,7 +46,7 @@ class Users {
           res.status(401);
           return res.send({
             status: false,
-            message: 'Password in correct, please provide correct password'
+            message: 'Password incorrect, please provide correct password'
           });
         }
         const token = jwtHelper.issue({ id: result.id });
