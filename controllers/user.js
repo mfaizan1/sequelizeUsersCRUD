@@ -32,40 +32,37 @@ class Users {
         res.send({ status: false, message: 'Sorry , couldn\'t create user' });
       });
   }
-  singIn(req, res) {
-    db.User.findOne({
-      where: {
-        email: req.body.email
-      }
-    })
-      .then(async result => {
-        if (!result) {
-          res.status(404);
-          return res.send({
-            status: false,
-            message: 'Email or Password is incorrect, please provide correct password'
-          });
-        }
-        const isPasswordCorrect = await bcrypt.compare(
-          req.body.password,
-          result.password
-        );
-        if (!isPasswordCorrect) {
-          res.status(404);
-          return res.send({
-            status: false,
-            message: 'Email or Password is incorrect, please provide correct password'
-          });
-        }
-        const token = jwtHelper.issue({ id: result.id });
-        res.send({ status: true, message: 'Singin successful', token });
-      })
-      .catch(err => {
-        console.log('Error', err);
-        res.status(500);
-        res.send({ status: false, message: 'Sorry , couldn\'t singin' });
+  singIn = async (req, res) => {
+    let user; 
+    try {
+      user  = await this.getUserDetails(req.body.email);
+    } catch (error) {
+      return res.send({
+        status: false,
+        message: 'Email or Password is incorrect, please provide correct password'
       });
-  }
+    }
+    
+    try {
+      const isPasswordCorrect = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (!isPasswordCorrect) {
+        res.status(404);
+        return res.send({
+          status: false,
+          message: 'Email or Password is incorrect, please provide correct password'
+        });
+      }
+      const token = jwtHelper.issue({ id: user.id });
+      delete user.password;
+      return res.send({ status: true, message: 'Singin successful', token, user });
+    } catch (error) {
+      console.log('Error', error);
+      res.status(500);
+      res.send({ status: false, message: 'Sorry , couldn\'t singin' });
+    }
   userDetails(req, res) {
     db.User.findOne({
       attributes: ['firstName', 'lastName', 'email'],
