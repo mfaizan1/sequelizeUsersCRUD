@@ -3,6 +3,7 @@ const db = require('./../models');
 const jwtHelper = require('./../utils/jwt');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+
 class Users {
   async signUp(req, res) {
     let passwrodHash;
@@ -139,6 +140,28 @@ class Users {
       res.send({ msgForUser: 'Internal server error', msgForDebugging: err });
     });
 
+  }
+
+  getUserDetails(email){
+    return new Promise(async(resolve, reject) => {
+      try {
+        const user = await db.User.findOne({
+          where: {
+            email: email
+          },
+          attributes: ['id', 'firstName', 'lastName', 'email', 'profilePicture', 'password'],
+          raw: true
+        });
+        if (user){
+          resolve(user);
+        }
+        reject(404);
+      } catch (error) {
+        console.log('error: ', error);
+        reject(error);
+      }
+
+    });
   }
 }
 module.exports = new Users();
