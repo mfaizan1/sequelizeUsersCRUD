@@ -63,6 +63,7 @@ class Users {
       res.status(500);
       res.send({ status: false, message: 'Sorry , couldn\'t singin' });
     }
+  }
   userDetails(req, res) {
     db.User.findOne({
       attributes: ['firstName', 'lastName', 'email'],
