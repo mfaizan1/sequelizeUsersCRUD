@@ -32,17 +32,17 @@ class Users {
         res.send({ status: false, message: 'Sorry , couldn\'t create user' });
       });
   }
-  singIn = async (req, res) => {
-    let user; 
+  async singIn(req, res) {
+    let user;
     try {
-      user  = await this.getUserDetails(req.body.email);
+      user = await this.getUserDetails(req.body.email);
     } catch (error) {
       return res.send({
         status: false,
         message: 'Email or Password is incorrect, please provide correct password'
       });
     }
-    
+
     try {
       const isPasswordCorrect = await bcrypt.compare(
         req.body.password,
